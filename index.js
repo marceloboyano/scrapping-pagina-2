@@ -31,32 +31,39 @@ async function procesarNoticia(enlace) {
 
 
         noticias.each((indiceNoticia, elementoNoticia) => {
-            let tituloNoticia = noticias$(elementoNoticia).find('div h4 span[style="text-decoration:underline;"] a b').text().trim();
-           
+            let tituloNoticia = noticias$(elementoNoticia).find('div h4 span a.link').text().trim();
+            
+            let enlaces = '';
 
+                        
+            let enlace = noticias$(elementoNoticia).find('div h4 span a.link').attr('href');
+
+             
+            if (enlace) {
+                    enlaces += enlace + " - ";
+             }
+            
+            
        
-            let descripcionNoticias = [];
-              // Agregar el texto adicional a la descripción
-                let textoAdicional = noticias$(elementoNoticia).find('div[style="padding-bottom:12px;padding-left:15px;padding-right:15px;padding-top:12px;"] p').text().trim();
-                descripcionNoticias.push(textoAdicional);
+             let descripcionNoticias = [];
+             // Agregar el texto adicional a la descripción
+           // Encuentra el contenedor de descripciones con uno u otro estilo
+            let contenedorDescripcion = noticias$(elementoNoticia).find('div[style="padding-bottom:12px;padding-left:15px;padding-right:15px;padding-top:12px;"], div[style="padding-bottom:12px;padding-left:37px;padding-right:27px;padding-top:0px;"]');
+ 
+             // Obtener el texto de la descripción
+             let textoAdicional = contenedorDescripcion.find('p').text().trim();             
 
-                // Buscar la lista desordenada (ul) dentro de la noticia
-                let listaDesordenada = noticias$(elementoNoticia).find('div[style="padding-bottom:12px;padding-left:37px;padding-right:27px;padding-top:0px;"] ul');
-
-                if (listaDesordenada.length > 0) {
-                    // Iterar sobre los elementos de la lista (li) y agregarlos a la descripción
-                    listaDesordenada.find('li').each((indiceLista, itemLista) => {
-                        descripcionNoticias.push(noticias$(itemLista).text().trim());
-                    });
-                }
-
-                // Concatenar todo el texto en una descripción
-                let descripcionCompleta = descripcionNoticias.join('\n');
+ 
+             // Concatenar todo el texto en una descripción
+             descripcionNoticias.push(textoAdicional);
+             let descripcionCompleta = descripcionNoticias.join('\n');
+ 
 
                 // Estructura de datos para la noticia
                 let noticia = {
                     Titulo: tituloNoticia,
-                    Descripcion: descripcionCompleta
+                    Descripcion: descripcionCompleta,
+                    Enlaces: enlaces
                 };
             // Imprimir la estructura de datos o realizar otras operaciones según sea necesario
             console.log('Noticia:', noticia);
